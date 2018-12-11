@@ -1,14 +1,9 @@
 package com.group.a4p61.quizvenge;
 
 import android.content.Context;
-import android.util.JsonReader;
-import android.view.View;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
-
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Random;
@@ -23,8 +18,6 @@ public class ReadQuiz {
         this.context=context;
         random = new Random(randomSeed);
         try {
-            System.out.println(System.getProperty("user.dir"));
-
             rootObj = new JSONObject(readString(context.getResources().openRawResource(R.raw.questions)));
         } catch(Exception e) {
             e.printStackTrace();
@@ -37,6 +30,29 @@ public class ReadQuiz {
             return currentObj.getString("question");
         } catch (Exception e) {
 
+        }
+        return null;
+    }
+
+    public String[] getIncorrectAnswers() {
+        try {
+            JSONArray result = currentObj.getJSONArray("incorrect_answers");
+            String[] incorrectAnswers = new String[result.length()];
+            for(int i=0; i<result.length();i++) {
+                incorrectAnswers[i]=(String)result.get(i);
+            }
+            return incorrectAnswers;
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+        return  null;
+    }
+
+    public String getCorrectAnswer() {
+        try {
+            return currentObj.getString("correct_answer");
+        } catch(Exception e) {
+            e.printStackTrace();
         }
         return null;
     }
