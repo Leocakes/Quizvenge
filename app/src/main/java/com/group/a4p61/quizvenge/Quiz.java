@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,6 +19,8 @@ public class Quiz extends AppCompatActivity implements View.OnClickListener {
     private ReadQuiz readQuiz;
     private LinearLayout linearLayout;
     private String  correctAnswer;
+    private int rightAnswers;
+    final static int totalAnswers=5;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +29,7 @@ public class Quiz extends AppCompatActivity implements View.OnClickListener {
         readQuiz = new ReadQuiz(100,this);
         linearLayout =findViewById(R.id.linearLayout);
         newQuestion();
+        this.rightAnswers=0;
     }
 
     public void newQuestion() {
@@ -71,6 +75,9 @@ public class Quiz extends AppCompatActivity implements View.OnClickListener {
     public void onClick(View v) {
         if(((Button)v).getText().equals(this.correctAnswer)) {
             Toast.makeText(this,"Correct",Toast.LENGTH_SHORT).show();
+            this.rightAnswers++;
+            ProgressBar p = findViewById(R.id.progressBar);
+            Toast.makeText(this,Integer.toString((this.rightAnswers)*100),Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(this,"Incorrect",Toast.LENGTH_SHORT).show();
         }
