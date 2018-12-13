@@ -91,7 +91,6 @@ public class MainActivity extends AppCompatActivity {
                     JSONObject jObj = new JSONObject();
                     jObj.put("ID", tup.id);
                     jObj.put("NAME",tup.name);
-                    jObj.put("NUMBER",tup.number);
                     jsonArray.put(jObj);
                 } catch(Exception e) {
                     e.printStackTrace();
