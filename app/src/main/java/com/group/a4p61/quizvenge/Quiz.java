@@ -1,6 +1,7 @@
 package com.group.a4p61.quizvenge;
 
 import android.content.Intent;
+import android.os.CountDownTimer;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -29,6 +30,21 @@ public class Quiz extends AppCompatActivity implements View.OnClickListener {
         linearLayout =findViewById(R.id.linearLayout);
         newQuestion();
         this.score=0;
+        int seconds=90;
+        final TextView timerView = findViewById(R.id.timer);
+        new CountDownTimer(seconds*1000,1000) {
+
+            @Override
+            public void onTick(long millisUntilFinished) {
+                int seconds = (int)millisUntilFinished/1000;
+                timerView.setText(Integer.toString(seconds/60)+":"+((seconds%60)<10?"0":"")+Integer.toString(seconds%60));
+            }
+
+            @Override
+            public void onFinish() {
+
+            }
+        }.start();
     }
 
     public void newQuestion() {
@@ -82,6 +98,8 @@ public class Quiz extends AppCompatActivity implements View.OnClickListener {
             Toast.makeText(this,"Incorrect",Toast.LENGTH_SHORT).show();
             this.score--;
         }
+        TextView scoreView = findViewById(R.id.score);
+        scoreView.setText("Score:"+Integer.toString(this.score));
         newQuestion();
     }
 }

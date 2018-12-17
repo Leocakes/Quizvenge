@@ -120,7 +120,7 @@ public class QuizMainActivity extends AppCompatActivity {
 
             try {
                 hostArray = new JSONArray(testMessage.remove());
-                ArrayAdapter<String> arrayAdapter = new ArrayAdapter(QuizMainActivity.this, android.R.layout.simple_list_item_1);
+                ArrayAdapter<String> arrayAdapter = new ArrayAdapter(QuizMainActivity.this, android.R.layout.select_dialog_singlechoice);
                 for (int i = 0; i < hostArray.length(); i++) {
                     arrayAdapter.add(hostArray.getJSONObject(i).getString("NAME"));
                 }
