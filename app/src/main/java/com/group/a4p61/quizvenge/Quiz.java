@@ -75,9 +75,10 @@ public class Quiz extends AppCompatActivity implements View.OnClickListener {
     public void onClick(View v) {
         if(((Button)v).getText().equals(this.correctAnswer)) {
             Toast.makeText(this,"Correct",Toast.LENGTH_SHORT).show();
-            this.rightAnswers++;
+            this.rightAnswers+=100/this.totalAnswers;
             ProgressBar p = findViewById(R.id.progressBar);
-            Toast.makeText(this,Integer.toString((this.rightAnswers)*100),Toast.LENGTH_SHORT).show();
+            p.setProgress(this.rightAnswers);
+            Toast.makeText(this,"Correct",Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(this,"Incorrect",Toast.LENGTH_SHORT).show();
         }
