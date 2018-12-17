@@ -1,6 +1,3 @@
 <resources>
     <string name="app_name">Quizvenge</string>
-    <string name="finding_service">Finding local services</string>
-    <string name="btn_send">Send</string>
-    <string name="txt_hint">Type Message</string>
 </resources>

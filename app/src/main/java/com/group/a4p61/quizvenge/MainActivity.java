@@ -118,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void startQuiz(View v) {
-        Intent intent = new Intent(MainActivity.this,WiFiServiceDiscoveryActivity.class);
+        Intent intent = new Intent(MainActivity.this,Quiz.class);
         startActivity(intent);
     }
 }
