@@ -28,6 +28,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -168,12 +169,10 @@ public class MainActivity extends AppCompatActivity implements WiFiDirectService
     }
 
     private void discoverService() {
-
         /*
          * Register listeners for DNS-SD services. These are callbacks invoked
          * by the system when a service is actually discovered.
          */
-
         manager.setDnsSdResponseListeners(channel,
                 new WifiP2pManager.DnsSdServiceResponseListener() {
 
@@ -291,7 +290,7 @@ public class MainActivity extends AppCompatActivity implements WiFiDirectService
                 // construct a string from the valid bytes in the buffer
                 String readMessage = new String(readBuf, 0, msg.arg1);
                 Log.d(TAG, readMessage);
-                // DO SOMETHING WITH THE MESSAGE
+                Toast.makeText(this, "I have received a message", Toast.LENGTH_SHORT).show();
                 break;
 
             case MY_HANDLE:
@@ -367,5 +366,11 @@ public class MainActivity extends AppCompatActivity implements WiFiDirectService
     public void pushMessage(String readMessage) {
 //        adapter.add(readMessage);
 //        adapter.notifyDataSetChanged();
+    }
+
+    public void buttonTest(View view){
+        if (messageHandler!=null) {
+            messageHandler.write("test message".getBytes());
+        }
     }
 }
