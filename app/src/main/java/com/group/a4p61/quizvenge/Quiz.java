@@ -71,6 +71,8 @@ public class Quiz extends AppCompatActivity implements View.OnClickListener {
         }
     }
 
+
+
     @Override
     public void onClick(View v) {
         if(((Button)v).getText().equals(this.correctAnswer)) {

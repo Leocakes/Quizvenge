@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements WiFiDirectService
     /*
     Networking Stuff End
      */
-
+    private Boolean start;
     /*
     Chat Fragment Stuff
      */
@@ -91,6 +91,7 @@ public class MainActivity extends AppCompatActivity implements WiFiDirectService
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         networkingSetup();
+        this.start=false;
     }
 
     /**
@@ -250,6 +251,8 @@ public class MainActivity extends AppCompatActivity implements WiFiDirectService
         });
     }
 
+
+
     @Override
     public void connectP2p(WiFiP2pService service) {
         WifiP2pConfig config = new WifiP2pConfig();
@@ -291,6 +294,12 @@ public class MainActivity extends AppCompatActivity implements WiFiDirectService
                 String readMessage = new String(readBuf, 0, msg.arg1);
                 Log.d(TAG, readMessage);
                 Toast.makeText(this, "I have received a message", Toast.LENGTH_SHORT).show();
+                if(this.start==false) {
+                    this.start=true;
+                    messageHandler.write("test message".getBytes());
+                    Intent intent = new Intent(MainActivity.this, QuizMainActivity.class);
+                    startActivity(intent);
+                }
                 break;
 
             case MY_HANDLE:
