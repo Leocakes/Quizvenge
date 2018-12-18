@@ -27,6 +27,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -420,8 +421,15 @@ public class MainActivity extends AppCompatActivity implements WiFiDirectService
     }
 
     public void startQuiz(View v) {
-        quizFragment = new Quiz();
-        getFragmentManager().beginTransaction()
-                .replace(R.id.container_root, quizFragment).commit();
+        EditText msgBox = findViewById(R.id.messageBox);
+        if (quizMainFragment.selectedContact==null) {
+            Toast.makeText(this,"Select a contact",Toast.LENGTH_SHORT).show();
+        } else if(msgBox.getText().length()==0) {
+           Toast.makeText(this,"Enter message",Toast.LENGTH_SHORT).show();
+        } else {
+            quizFragment = new Quiz();
+            getFragmentManager().beginTransaction()
+                    .replace(R.id.container_root, quizFragment).commit();
+        }
     }
 }

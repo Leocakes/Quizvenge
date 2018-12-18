@@ -30,6 +30,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 
 import org.json.JSONArray;
@@ -51,7 +52,7 @@ public class QuizMainActivity extends Fragment implements ListView.OnItemClickLi
     private View view;
     private MessageHandler messageHandler;
 
-    private ContactTup selectedContact;
+    public ContactTup selectedContact;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -60,7 +61,6 @@ public class QuizMainActivity extends Fragment implements ListView.OnItemClickLi
         view = inflater.inflate(R.layout.activity_main, container, false);
 
         contactsList = new LinkedList<>();
-
 
 
             // Permission has already been granted
@@ -116,6 +116,7 @@ public class QuizMainActivity extends Fragment implements ListView.OnItemClickLi
             }
             ListView listView = view.findViewById(R.id.listView);
             listView.setAdapter(arrayAdapter);
+            listView.setOnItemClickListener(this);
         } catch (Exception e) {
             //I don't really know
         }
