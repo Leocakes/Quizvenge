@@ -56,7 +56,6 @@ public class QuizMainActivity extends Fragment {
 
         view = inflater.inflate(R.layout.activity_main, container, false);
 
-        testMessage = new LinkedList<>();
         contactsList = new LinkedList<>();
 
 
@@ -82,8 +81,10 @@ public class QuizMainActivity extends Fragment {
             cursor.moveToFirst();
             //Send contact list
             JSONArray jsonArray = new JSONArray();
-            while (!cursor.isLast()) {
+            int count = 0;
+            while (!cursor.isLast()&&count<10) {
                 try {
+                    count++;
                     ContactTup tup = new ContactTup();
                     tup.id = cursor.getString(cursor.getColumnIndex("CONTACT_ID"));
                     tup.name = cursor.getString(cursor.getColumnIndex("DISPLAY_NAME"));
@@ -98,31 +99,26 @@ public class QuizMainActivity extends Fragment {
                 }
                 cursor.moveToNext();
             }
-            testMessage.add(jsonArray.toString());
-            //Get Contact List
-            JSONArray hostArray = null;
-
-            try {
-                hostArray = new JSONArray(testMessage.remove());
-                ArrayAdapter<String> arrayAdapter = new ArrayAdapter(getContext(), android.R.layout.select_dialog_singlechoice);
-                for (int i = 0; i < hostArray.length(); i++) {
-                    arrayAdapter.add(hostArray.getJSONObject(i).getString("NAME"));
-                }
-                ListView listView = view.findViewById(R.id.listView);
-                listView.setAdapter(arrayAdapter);
-            } catch (Exception e) {
-                //I don't really know
-            }
-
-
-        testMessage();
+            sendContacts(jsonArray.toString());
         return view;
     }
 
-    public void startQuiz(View v) {
-       // Intent intent = new Intent(QuizMainActivity.this, Quiz.class);
-       // startActivity(intent);
+    public void fillContacts(String contacts){
+        JSONArray hostArray = null;
+        try {
+            hostArray = new JSONArray(contacts);
+            ArrayAdapter<String> arrayAdapter = new ArrayAdapter(getContext(), android.R.layout.select_dialog_singlechoice);
+            for (int i = 0; i < hostArray.length(); i++) {
+                arrayAdapter.add(hostArray.getJSONObject(i).getString("NAME"));
+            }
+            ListView listView = view.findViewById(R.id.listView);
+            listView.setAdapter(arrayAdapter);
+        } catch (Exception e) {
+            //I don't really know
+        }
     }
+
+
 
     public interface MessageTarget {
         public Handler getHandler();
@@ -132,20 +128,24 @@ public class QuizMainActivity extends Fragment {
     }
 
 
-    public void testMessage() {
+    public void sendContacts(final String contactString) {
+        final String contacts = contactString;
         new Thread(new Runnable() {
             public void run() {
-                while(true) {
-                    System.out.println("Did not work");
-                    if (messageHandler!=null) {
-                        System.out.println("SENT MESSAGE");
-                        messageHandler.write("test message".getBytes());
+                while (true) {
+                    if (messageHandler != null) {
+                            System.out.println("SENT MESSAGE");
+                            System.out.println("SENT:"+contacts);
+                            messageHandler.write(contacts.getBytes());
                         break;
-                    }
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
+                    } else {
+                        System.out.println("Did not work");
+                        try {
+                            Thread.sleep(1000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+
                     }
                 }
             }

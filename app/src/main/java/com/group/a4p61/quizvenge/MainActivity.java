@@ -31,6 +31,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -68,9 +69,13 @@ public class MainActivity extends AppCompatActivity implements WiFiDirectService
     private final static int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 12345;
 
     private QuizMainActivity quizMainFragment;
+    private Quiz quizFragment;
 
     private Handler handler = new Handler(this);
     private WiFiDirectServicesList servicesList;
+
+    Queue<String> contacts = new LinkedList<>();
+    Boolean receivingContacts = false;
 
     public Handler getHandler() {
         return handler;
@@ -321,7 +326,10 @@ public class MainActivity extends AppCompatActivity implements WiFiDirectService
                 // construct a string from the valid bytes in the buffer
                 String readMessage = new String(readBuf, 0, msg.arg1);
                 Log.d(TAG, readMessage);
-                Toast.makeText(this, "I have received a message", Toast.LENGTH_SHORT).show();
+                if(readMessage.contains("ID")&&readMessage.contains("NAME")){
+                    (quizMainFragment).fillContacts(readMessage);
+                }
+
                 break;
 
             case MY_HANDLE:
@@ -373,7 +381,6 @@ public class MainActivity extends AppCompatActivity implements WiFiDirectService
                     p2pInfo.groupOwnerAddress);
             handler.start();
         }
-        System.out.println("HI I DID IT");
 
                         quizMainFragment = new QuizMainActivity();
                         getFragmentManager().beginTransaction()
@@ -410,5 +417,11 @@ public class MainActivity extends AppCompatActivity implements WiFiDirectService
         if (messageHandler!=null) {
             messageHandler.write("test message".getBytes());
         }
+    }
+
+    public void startQuiz(View v) {
+        quizFragment = new Quiz();
+        getFragmentManager().beginTransaction()
+                .replace(R.id.container_root, quizFragment).commit();
     }
 }

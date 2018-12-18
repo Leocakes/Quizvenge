@@ -2,36 +2,47 @@ package com.group.a4p61.quizvenge;
 
 import android.content.Intent;
 import android.os.CountDownTimer;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
-public class Quiz extends AppCompatActivity implements View.OnClickListener {
+public class Quiz extends android.app.Fragment implements View.OnClickListener {
     private ReadQuiz readQuiz;
     private LinearLayout linearLayout;
     private String  correctAnswer;
     private int score;
 
+    private View view;
+    private MessageHandler messageHandler;
+
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_quiz);
-        readQuiz = new ReadQuiz(100,this);
-        linearLayout =findViewById(R.id.linearLayout);
+        view = inflater.inflate(R.layout.activity_quiz, container, false);
+
+
+        readQuiz = new ReadQuiz(100,getContext());
+        linearLayout =view.findViewById(R.id.linearLayout);
         newQuestion();
         this.score=0;
         int seconds=90;
-        final TextView timerView = findViewById(R.id.timer);
+        final TextView timerView = view.findViewById(R.id.timer);
         new CountDownTimer(seconds*1000,1000) {
 
             @Override
@@ -45,11 +56,13 @@ public class Quiz extends AppCompatActivity implements View.OnClickListener {
 
             }
         }.start();
+
+        return view;
     }
 
     public void newQuestion() {
         linearLayout.removeAllViews();
-        TextView question = findViewById(R.id.question);
+        TextView question = view.findViewById(R.id.question);
         String result = readQuiz.getQuestion();
         question.setText(result);
         addButtons();
@@ -79,7 +92,7 @@ public class Quiz extends AppCompatActivity implements View.OnClickListener {
             }
         }
         for(Integer n : nums) {
-            Button b = new Button(this);
+            Button b = new Button(getContext());
             b.setText(qArray[n]);
             b.setOnClickListener(this);
             linearLayout.addView(b);
@@ -91,14 +104,14 @@ public class Quiz extends AppCompatActivity implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         if(((Button)v).getText().equals(this.correctAnswer)) {
-            Toast.makeText(this,"Correct",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(),"Correct",Toast.LENGTH_SHORT).show();
             this.score++;
-            Toast.makeText(this,"Correct",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(),"Correct",Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(this,"Incorrect",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(),"Incorrect",Toast.LENGTH_SHORT).show();
             this.score--;
         }
-        TextView scoreView = findViewById(R.id.score);
+        TextView scoreView = view.findViewById(R.id.score);
         scoreView.setText("Score:"+Integer.toString(this.score));
         newQuestion();
     }
