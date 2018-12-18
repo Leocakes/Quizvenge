@@ -41,7 +41,7 @@ public class Quiz extends android.app.Fragment implements View.OnClickListener {
         linearLayout =view.findViewById(R.id.linearLayout);
         newQuestion();
         this.score=0;
-        int seconds=90;
+        int seconds=15;
         final TextView timerView = view.findViewById(R.id.timer);
         new CountDownTimer(seconds*1000,1000) {
 

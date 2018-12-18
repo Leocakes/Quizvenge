@@ -28,6 +28,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -41,7 +42,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 
-public class QuizMainActivity extends Fragment {
+public class QuizMainActivity extends Fragment implements ListView.OnItemClickListener {
 
     public List<ContactTup> contactsList;
     private Queue<String> testMessage;
@@ -49,6 +50,8 @@ public class QuizMainActivity extends Fragment {
 
     private View view;
     private MessageHandler messageHandler;
+
+    private ContactTup selectedContact;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -118,6 +121,10 @@ public class QuizMainActivity extends Fragment {
         }
     }
 
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        selectedContact=contactsList.get(position);
+    }
 
 
     public interface MessageTarget {
