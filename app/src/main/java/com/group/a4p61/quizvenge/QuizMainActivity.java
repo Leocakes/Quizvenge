@@ -25,7 +25,9 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -39,44 +41,26 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 
-public class QuizMainActivity extends AppCompatActivity {
+public class QuizMainActivity extends Fragment {
 
     public List<ContactTup> contactsList;
     private Queue<String> testMessage;
     String selection = ContactsContract.Data.MIMETYPE + " in (?, ?)";
 
-    private final static int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 12345;
-
+    private View view;
+    private MessageHandler messageHandler;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+
+        view = inflater.inflate(R.layout.activity_main, container, false);
+
         testMessage = new LinkedList<>();
         contactsList = new LinkedList<>();
 
-        if (ContextCompat.checkSelfPermission(QuizMainActivity.this,
-                Manifest.permission.READ_CONTACTS)
-                != PackageManager.PERMISSION_GRANTED) {
 
-            // Permission is not granted
-            // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(QuizMainActivity.this,
-                    Manifest.permission.READ_CONTACTS)) {
-                // Show an explanation to the user *asynchronously* -- don't block
-                // this thread waiting for the user's response! After the user
-                // sees the explanation, try again to request the permission.
-            } else {
-                // No explanation needed; request the permission
-                ActivityCompat.requestPermissions(QuizMainActivity.this,
-                        new String[]{Manifest.permission.READ_CONTACTS},
-                        MY_PERMISSIONS_REQUEST_READ_CONTACTS);
 
-                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-                // app-defined int constant. The callback method gets the
-                // result of the request.
-            }
-        } else {
             // Permission has already been granted
             String[] projection = {
                     ContactsContract.Data.CONTACT_ID,
@@ -94,7 +78,7 @@ public class QuizMainActivity extends AppCompatActivity {
 // we could also use Uri uri = ContactsContract.Data.CONTENT_URI;
 
 // ok, let's work...
-            Cursor cursor = getContentResolver().query(uri, projection, selection, selectionArgs, sortOrder);
+            Cursor cursor = getActivity().getApplication().getContentResolver().query(uri, projection, selection, selectionArgs, sortOrder);
             cursor.moveToFirst();
             //Send contact list
             JSONArray jsonArray = new JSONArray();
@@ -120,22 +104,51 @@ public class QuizMainActivity extends AppCompatActivity {
 
             try {
                 hostArray = new JSONArray(testMessage.remove());
-                ArrayAdapter<String> arrayAdapter = new ArrayAdapter(QuizMainActivity.this, android.R.layout.select_dialog_singlechoice);
+                ArrayAdapter<String> arrayAdapter = new ArrayAdapter(getContext(), android.R.layout.select_dialog_singlechoice);
                 for (int i = 0; i < hostArray.length(); i++) {
                     arrayAdapter.add(hostArray.getJSONObject(i).getString("NAME"));
                 }
-                ListView listView = findViewById(R.id.listView);
+                ListView listView = view.findViewById(R.id.listView);
                 listView.setAdapter(arrayAdapter);
             } catch (Exception e) {
                 //I don't really know
             }
 
-        }
 
+        testMessage();
+        return view;
     }
 
     public void startQuiz(View v) {
-        Intent intent = new Intent(QuizMainActivity.this, Quiz.class);
-        startActivity(intent);
+       // Intent intent = new Intent(QuizMainActivity.this, Quiz.class);
+       // startActivity(intent);
+    }
+
+    public interface MessageTarget {
+        public Handler getHandler();
+    }
+    public void setMessgaeHandler(MessageHandler obj) {
+        messageHandler = obj;
+    }
+
+
+    public void testMessage() {
+        new Thread(new Runnable() {
+            public void run() {
+                while(true) {
+                    System.out.println("Did not work");
+                    if (messageHandler!=null) {
+                        System.out.println("SENT MESSAGE");
+                        messageHandler.write("test message".getBytes());
+                        break;
+                    }
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }).start();
     }
 }

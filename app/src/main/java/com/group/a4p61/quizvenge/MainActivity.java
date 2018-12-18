@@ -49,6 +49,8 @@ public class MainActivity extends AppCompatActivity implements WiFiDirectService
      */
     static final int SERVER_PORT = 4545;
 
+    public static MainActivity currentActivity;
+
     private final IntentFilter intentFilter = new IntentFilter();
     private WifiP2pManager.Channel channel;
     private BroadcastReceiver receiver = null;
@@ -62,6 +64,10 @@ public class MainActivity extends AppCompatActivity implements WiFiDirectService
 
     public static final int MESSAGE_READ = 0x400 + 1;
     public static final int MY_HANDLE = 0x400 + 2;
+
+    private final static int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 12345;
+
+    private QuizMainActivity quizMainFragment;
 
     private Handler handler = new Handler(this);
     private WiFiDirectServicesList servicesList;
@@ -80,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements WiFiDirectService
     /*
     Chat Fragment Stuff
      */
-    private MessageHandler messageHandler;
+    public static MessageHandler messageHandler;
 
     /*
     Chat Fragment Stuff End
@@ -91,7 +97,29 @@ public class MainActivity extends AppCompatActivity implements WiFiDirectService
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         networkingSetup();
-        this.start=false;
+
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.READ_CONTACTS)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            // Permission is not granted
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.READ_CONTACTS)) {
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+            } else {
+                // No explanation needed; request the permission
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.READ_CONTACTS},
+                        MY_PERMISSIONS_REQUEST_READ_CONTACTS);
+
+                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+                // app-defined int constant. The callback method gets the
+                // result of the request.
+            }
+        }
     }
 
     /**
@@ -294,17 +322,12 @@ public class MainActivity extends AppCompatActivity implements WiFiDirectService
                 String readMessage = new String(readBuf, 0, msg.arg1);
                 Log.d(TAG, readMessage);
                 Toast.makeText(this, "I have received a message", Toast.LENGTH_SHORT).show();
-                if(this.start==false) {
-                    this.start=true;
-                    messageHandler.write("test message".getBytes());
-                    Intent intent = new Intent(MainActivity.this, QuizMainActivity.class);
-                    startActivity(intent);
-                }
                 break;
 
             case MY_HANDLE:
                 Object obj = msg.obj;
                 setMessageHandler((MessageHandler) obj);
+                (quizMainFragment).setMessgaeHandler((MessageHandler) obj);
 
         }
         return true;
@@ -351,6 +374,12 @@ public class MainActivity extends AppCompatActivity implements WiFiDirectService
             handler.start();
         }
         System.out.println("HI I DID IT");
+
+                        quizMainFragment = new QuizMainActivity();
+                        getFragmentManager().beginTransaction()
+                                .replace(R.id.container_root, quizMainFragment).commit();
+
+
         /**
          * Connection started now do thing, replaced
          *         chatFragment = new WiFiChatFragment();
