@@ -19,6 +19,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -32,7 +33,7 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
 
-public class MainActivity extends AppCompatActivity implements WiFiDirectServicesList.DeviceClickListener, Handler.Callback, WifiP2pManager.ConnectionInfoListener {
+public class MainActivity extends AppCompatActivity implements WiFiDirectServicesList.DeviceClickListener, Handler.Callback, WifiP2pManager.ConnectionInfoListener, Runnable {
 
     public static final String TAG = "quizvenge";
 
@@ -57,6 +58,8 @@ public class MainActivity extends AppCompatActivity implements WiFiDirectService
 
     private final static int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 12345;
 
+    private static final int SEND_SMS=6565;
+
     private QuizMainActivity quizMainFragment;
     private Quiz quizFragment;
 
@@ -69,6 +72,9 @@ public class MainActivity extends AppCompatActivity implements WiFiDirectService
 
     Queue<String> contacts = new LinkedList<>();
     Boolean receivingContacts = false;
+
+    private Integer theirScore;
+    private Integer yourScore;
 
     public Handler getHandler() {
         return handler;
@@ -96,9 +102,14 @@ public class MainActivity extends AppCompatActivity implements WiFiDirectService
         setContentView(R.layout.main);
         networkingSetup();
 
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.READ_CONTACTS)
-                != PackageManager.PERMISSION_GRANTED) {
+        requestPermissions(new String[]{Manifest.permission.SEND_SMS},SEND_SMS);
+
+
+        if (checkSelfPermission(Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_DENIED) {
+            Toast.makeText(this,"Needs sms permission",Toast.LENGTH_SHORT).show();
+        }
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
 
             // Permission is not granted
             // Should we show an explanation?
@@ -118,6 +129,7 @@ public class MainActivity extends AppCompatActivity implements WiFiDirectService
                 // result of the request.
             }
         }
+
     }
 
     /**
@@ -149,6 +161,16 @@ public class MainActivity extends AppCompatActivity implements WiFiDirectService
             });
         }
         super.onStop();
+    }
+
+    public void gameEnd() {
+        if(theirScore>yourScore) {
+            Toast.makeText(this,"You lose",Toast.LENGTH_SHORT).show();
+            SmsManager manager = SmsManager.getDefault();
+            manager.sendTextMessage("7053082563", null, "Hello", null, null);
+        } else {
+            Toast.makeText(this,"You win",Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void networkingSetup(){
@@ -323,6 +345,15 @@ public class MainActivity extends AppCompatActivity implements WiFiDirectService
                     (quizMainFragment).fillContacts(readMessage);
                 }
 
+                if(readMessage.contains("SCORE")) {
+                    Toast.makeText(this,readMessage,Toast.LENGTH_SHORT).show();
+                    this.theirScore=Integer.parseInt(readMessage.substring(6));
+                    Toast.makeText(this,"Their score "+Integer.toString(theirScore),Toast.LENGTH_SHORT).show();
+                    if(yourScore!=null ) {
+                        gameEnd();
+                    }
+                }
+
                 if(readMessage.contains("MESSAGE")) {
                     try {
                         JSONObject jObj = new JSONObject(readMessage);
@@ -346,9 +377,6 @@ public class MainActivity extends AppCompatActivity implements WiFiDirectService
                 Object obj = msg.obj;
                 setMessageHandler((MessageHandler) obj);
                 (quizMainFragment).setMessageHandler((MessageHandler) obj);
-
-
-
         }
         return true;
     }
@@ -407,6 +435,14 @@ public class MainActivity extends AppCompatActivity implements WiFiDirectService
          *         statusTxtView.setVisibility(View.GONE);
          */
     }
+    //For when the quiz is over
+    @Override
+    public void run() {
+        this.yourScore=quizFragment.score;
+        if(this.theirScore!=null) {
+            gameEnd();
+        }
+    }
 
     /**
      * MESSAGE FRAGMENT TIME
@@ -444,6 +480,8 @@ public class MainActivity extends AppCompatActivity implements WiFiDirectService
                 jObj.put("MESSAGE",msgBox.getText());
                 messageHandler.write(jObj.toString().getBytes() );
                 quizFragment = new Quiz();
+                quizFragment.seconds=30;
+                new Handler().postDelayed(this,quizFragment.seconds*1000+500);
                 getFragmentManager().beginTransaction()
                         .replace(R.id.container_root, quizFragment).commit();
                 (quizFragment).setMessageHandler(messageHandler);

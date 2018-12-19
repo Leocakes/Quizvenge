@@ -25,8 +25,9 @@ public class Quiz extends android.app.Fragment implements View.OnClickListener {
     private ReadQuiz readQuiz;
     private LinearLayout linearLayout;
     private String  correctAnswer;
-    private int score;
-
+    public int score;
+    public int seconds;
+    public Boolean isOver;
     private View view;
     private MessageHandler messageHandler;
 
@@ -40,8 +41,8 @@ public class Quiz extends android.app.Fragment implements View.OnClickListener {
         readQuiz = new ReadQuiz(100,getContext());
         linearLayout =view.findViewById(R.id.linearLayout);
         newQuestion();
+        this.isOver=false;
         this.score=0;
-        int seconds=15;
         final TextView timerView = view.findViewById(R.id.timer);
         new CountDownTimer(seconds*1000,1000) {
 
@@ -53,6 +54,13 @@ public class Quiz extends android.app.Fragment implements View.OnClickListener {
 
             @Override
             public void onFinish() {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        isOver=true;
+                        messageHandler.write(("SCORE:"+Integer.toString(score)).getBytes());
+                    }
+                }).start();
 
             }
         }.start();

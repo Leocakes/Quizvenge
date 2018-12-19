@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Handler;
 import android.provider.ContactsContract;
 import android.os.Bundle;
+import android.telephony.SmsManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,7 @@ public class QuizMainActivity extends Fragment implements ListView.OnItemClickLi
     public List<ContactTup> otherContactList;
     private Queue<String> testMessage;
     String selection = ContactsContract.Data.MIMETYPE + " in (?, ?)";
+
 
     private View view;
     private MessageHandler messageHandler;
@@ -50,8 +52,7 @@ public class QuizMainActivity extends Fragment implements ListView.OnItemClickLi
             };
             String selection = ContactsContract.Data.MIMETYPE + " in (?, ?)";
             String[] selectionArgs = {
-                    ContactsContract.CommonDataKinds.Email.CONTENT_ITEM_TYPE,
-                    ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE,
+                    ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE
             };
             String sortOrder = ContactsContract.Contacts.SORT_KEY_ALTERNATIVE;
 
@@ -86,6 +87,7 @@ public class QuizMainActivity extends Fragment implements ListView.OnItemClickLi
             sendContacts(jsonArray.toString());
         return view;
     }
+
 
     public void fillContacts(String contacts){
         JSONArray hostArray = null;
