@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
@@ -37,8 +38,7 @@ public class Quiz extends android.app.Fragment implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         view = inflater.inflate(R.layout.activity_quiz, container, false);
 
-
-        readQuiz = new ReadQuiz(100,getContext());
+        readQuiz = new ReadQuiz((int)(System.currentTimeMillis()/1000L),getContext());
         linearLayout =view.findViewById(R.id.linearLayout);
         newQuestion();
         this.isOver=false;
@@ -117,7 +117,7 @@ public class Quiz extends android.app.Fragment implements View.OnClickListener {
     public void onClick(View v) {
         if(((Button)v).getText().equals(this.correctAnswer)) {
             Toast.makeText(getContext(),"Correct",Toast.LENGTH_SHORT).show();
-            this.score++;
+            this.score+=2;
             Toast.makeText(getContext(),"Correct",Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(getContext(),"Incorrect",Toast.LENGTH_SHORT).show();

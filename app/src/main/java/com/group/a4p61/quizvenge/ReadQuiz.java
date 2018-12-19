@@ -6,6 +6,8 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Random;
 
 public class ReadQuiz {
@@ -13,8 +15,10 @@ public class ReadQuiz {
     JSONObject currentObj;
     Random random;
     Context context;
+    List<JSONObject> previousQuestions;
 
     public ReadQuiz(int randomSeed, Context context) {
+        previousQuestions = new LinkedList<>();
         this.context=context;
         random = new Random(randomSeed);
         try {
@@ -60,7 +64,10 @@ public class ReadQuiz {
     public void getNext() {
         try {
             JSONArray array = rootObj.getJSONArray("results");
-            currentObj = (JSONObject) array.get(random.nextInt(array.length()));
+            do {
+                currentObj = (JSONObject) array.get(random.nextInt(array.length()));
+            } while(previousQuestions.contains(currentObj));
+            previousQuestions.add(currentObj);
         } catch(Exception e) {
             e.printStackTrace();
         }

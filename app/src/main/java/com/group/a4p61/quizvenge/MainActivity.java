@@ -480,7 +480,7 @@ public class MainActivity extends AppCompatActivity implements WiFiDirectService
                 jObj.put("MESSAGE",msgBox.getText());
                 messageHandler.write(jObj.toString().getBytes() );
                 quizFragment = new Quiz();
-                quizFragment.seconds=30;
+                quizFragment.seconds=60;
                 new Handler().postDelayed(this,quizFragment.seconds*1000+500);
                 getFragmentManager().beginTransaction()
                         .replace(R.id.container_root, quizFragment).commit();
