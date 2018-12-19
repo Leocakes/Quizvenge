@@ -338,7 +338,6 @@ public class MainActivity extends AppCompatActivity implements WiFiDirectService
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-
                 }
 
                 break;
@@ -347,7 +346,8 @@ public class MainActivity extends AppCompatActivity implements WiFiDirectService
                 Object obj = msg.obj;
                 setMessageHandler((MessageHandler) obj);
                 (quizMainFragment).setMessageHandler((MessageHandler) obj);
-                (quizFragment).setMessageHandler((MessageHandler) obj);
+
+
 
         }
         return true;
@@ -446,6 +446,8 @@ public class MainActivity extends AppCompatActivity implements WiFiDirectService
                 quizFragment = new Quiz();
                 getFragmentManager().beginTransaction()
                         .replace(R.id.container_root, quizFragment).commit();
+                (quizFragment).setMessageHandler(messageHandler);
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
