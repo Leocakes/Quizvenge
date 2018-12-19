@@ -346,7 +346,8 @@ public class MainActivity extends AppCompatActivity implements WiFiDirectService
             case MY_HANDLE:
                 Object obj = msg.obj;
                 setMessageHandler((MessageHandler) obj);
-                (quizMainFragment).setMessgaeHandler((MessageHandler) obj);
+                (quizMainFragment).setMessageHandler((MessageHandler) obj);
+                (quizFragment).setMessageHandler((MessageHandler) obj);
 
         }
         return true;

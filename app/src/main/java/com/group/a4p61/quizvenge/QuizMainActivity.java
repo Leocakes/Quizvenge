@@ -117,7 +117,7 @@ public class QuizMainActivity extends Fragment implements ListView.OnItemClickLi
     public interface MessageTarget {
         public Handler getHandler();
     }
-    public void setMessgaeHandler(MessageHandler obj) {
+    public void setMessageHandler(MessageHandler obj) {
         messageHandler = obj;
     }
 

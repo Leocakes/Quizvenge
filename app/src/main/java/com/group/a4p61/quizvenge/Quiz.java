@@ -99,6 +99,10 @@ public class Quiz extends android.app.Fragment implements View.OnClickListener {
         }
     }
 
+    public void setMessageHandler(MessageHandler obj) {
+        messageHandler = obj;
+    }
+
 
 
     @Override
