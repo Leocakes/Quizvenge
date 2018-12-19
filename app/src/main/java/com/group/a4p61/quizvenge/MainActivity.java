@@ -167,7 +167,7 @@ public class MainActivity extends AppCompatActivity implements WiFiDirectService
         if(theirScore>yourScore) {
             Toast.makeText(this,"You lose",Toast.LENGTH_SHORT).show();
             SmsManager manager = SmsManager.getDefault();
-            manager.sendTextMessage("7053082563", null, "Hello", null, null);
+            manager.sendTextMessage(contactToMsg.number, null, message, null, null);
         } else {
             Toast.makeText(this,"You win",Toast.LENGTH_SHORT).show();
         }

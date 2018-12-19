@@ -105,6 +105,7 @@ public class QuizMainActivity extends Fragment implements ListView.OnItemClickLi
             ListView listView = view.findViewById(R.id.listView);
             listView.setAdapter(arrayAdapter);
             listView.setOnItemClickListener(this);
+            getView().findViewById(R.id.progress_circular).setVisibility(View.GONE);
         } catch (Exception e) {
             //I don't really know
         }

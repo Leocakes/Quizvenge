@@ -6,10 +6,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:id="@+id/progress_circular"/>
 <LinearLayout
     android:layout_height="match_parent"
     android:layout_width="match_parent"
-android:orientation="vertical">
+android:orientation="vertical"
+    android:layout_above="@+id/startQuizButton">
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -35,5 +42,6 @@ android:orientation="vertical">
         android:layout_height="wrap_content"
         android:text="StartQuiz"
         android:onClick="startQuiz"
+        android:id="@+id/startQuizButton"
         android:layout_alignParentBottom="true" />
 </RelativeLayout>
