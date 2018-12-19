@@ -34,12 +34,12 @@
 
     <TextView
         android:id="@+id/winning_text"
-        android:layout_width="46dp"
-        android:layout_height="wrap_content"
+        android:layout_width="142dp"
+        android:layout_height="64dp"
         android:layout_gravity=""
         android:gravity="bottom"
         android:text=""
-        android:textSize="20dp"  />
+        android:textSize="20dp" />
 
 
 </FrameLayout>

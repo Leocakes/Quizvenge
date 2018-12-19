@@ -430,7 +430,7 @@ public class MainActivity extends AppCompatActivity implements WiFiDirectService
     }
 
     public void EndingScreen(Boolean win, String contact, String msg){
-        if (win){ // the screen for wiining
+        if (win){ // the screen for wining
             getSupportFragmentManager().beginTransaction().add(R.id.main, new WinningEnd()).commit();
             TextView textView = (TextView)findViewById(R.id.loosingtext);
             textView.setText("Text \"" + msg + "\" has been send to " + contact + ".");
