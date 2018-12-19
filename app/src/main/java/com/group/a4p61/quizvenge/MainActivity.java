@@ -21,6 +21,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.provider.ContactsContract;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -28,6 +30,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -40,6 +43,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
+import java.util.regex.Pattern;
 
 public class MainActivity extends AppCompatActivity implements WiFiDirectServicesList.DeviceClickListener, Handler.Callback, WifiP2pManager.ConnectionInfoListener {
 
@@ -424,4 +428,18 @@ public class MainActivity extends AppCompatActivity implements WiFiDirectService
         getFragmentManager().beginTransaction()
                 .replace(R.id.container_root, quizFragment).commit();
     }
+
+    public void EndingScreen(Boolean win, String contact, String msg){
+        if (win){ // the screen for wiining
+            getSupportFragmentManager().beginTransaction().add(R.id.main, new WinningEnd()).commit();
+            TextView textView = (TextView)findViewById(R.id.loosingtext);
+            textView.setText("Text \"" + msg + "\" has been send to " + contact + ".");
+        } else { // the screen for loosing
+            getSupportFragmentManager().beginTransaction().add(R.id.main, new LoosingEnd()).commit();
+            TextView textView = (TextView)findViewById(R.id.winning_text);
+            textView.setText("Text \"" + msg + "\" has been send to " + contact + " through your opponents phone.");
+        }
+    }
+
+
 }

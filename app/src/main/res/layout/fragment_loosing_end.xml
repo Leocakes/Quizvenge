@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    tools:context=".LoosingEnd">
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="386dp"
+        android:layout_height="381dp"
+        android:layout_gravity="center_horizontal"
+        android:src="@android:drawable/ic_delete" />
+
+    <Button
+        android:id="@+id/close"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:onClick="close_end"
+        android:textColor="@color/colorPrimary"
+        android:text="Exit" />
+
+    <TextView
+        android:id="@+id/message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="top"
+        android:text="you suck!"
+        android:textAlignment="center"
+        android:textAllCaps="true"
+        android:textColor="@color/colorPrimary"
+        android:textSize="40dp" />
+
+    <TextView
+        android:id="@+id/loosingtext"
+        android:layout_width="46dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity=""
+        android:gravity="bottom"
+        android:text=""
+        android:textSize="20dp" />
+
+
+</FrameLayout>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    tools:context=".WinningEnd">
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="408dp"
+        android:layout_gravity="center_horizontal"
+        android:src="@android:drawable/btn_star_big_on" />
+
+    <Button
+        android:id="@+id/close"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:onClick="close_end"
+        android:textColor="@color/colorPrimary"
+        android:text="Exit" />
+
+    <TextView
+        android:id="@+id/message"
+        android:textAllCaps="true"
+        android:textAlignment="center"
+        android:textColor="@color/colorPrimary"
+        android:textSize="40dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Congratulations you win!" />
+
+    <TextView
+        android:id="@+id/winning_text"
+        android:layout_width="46dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity=""
+        android:gravity="bottom"
+        android:text=""
+        android:textSize="20dp"  />
+
+
+</FrameLayout>
