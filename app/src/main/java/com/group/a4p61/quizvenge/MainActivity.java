@@ -23,6 +23,7 @@ import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONObject;
@@ -104,7 +105,6 @@ public class MainActivity extends AppCompatActivity implements WiFiDirectService
 
         requestPermissions(new String[]{Manifest.permission.SEND_SMS},SEND_SMS);
 
-
         if (checkSelfPermission(Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_DENIED) {
             Toast.makeText(this,"Needs sms permission",Toast.LENGTH_SHORT).show();
         }
@@ -168,8 +168,31 @@ public class MainActivity extends AppCompatActivity implements WiFiDirectService
             Toast.makeText(this,"You lose",Toast.LENGTH_SHORT).show();
             SmsManager manager = SmsManager.getDefault();
             manager.sendTextMessage(contactToMsg.number, null, message, null, null);
+            final LoosingEnd le = new LoosingEnd();
+            getFragmentManager().beginTransaction()
+                    .replace(R.id.container_root, le).commit();
+            final Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    le.testtext("Text \"" + message + "\" has been send to " + contactToMsg.name + " through your phone.");
+                }
+            },1000);
+            //textView.setText("Text \"" + message + "\" has been send to " + contactToMsg.name + ".");
         } else {
             Toast.makeText(this,"You win",Toast.LENGTH_SHORT).show();
+            final WinningEnd we = new WinningEnd();
+            getFragmentManager().beginTransaction()
+                    .replace(R.id.container_root, we).commit();
+            final Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    we.testtext("Text \"" + message + "\" has been send to " + contactToMsg.name + " through your opponents phone.");
+                }
+            },1000);
+            //TextView v =findViewById(R.id.winning_text);
+            //v.setText("Text \"" + message + "\" has been send to " + contactToMsg.name + " through your opponents phone.");
         }
     }
 
@@ -346,9 +369,7 @@ public class MainActivity extends AppCompatActivity implements WiFiDirectService
                 }
 
                 if(readMessage.contains("SCORE")) {
-                    Toast.makeText(this,readMessage,Toast.LENGTH_SHORT).show();
                     this.theirScore=Integer.parseInt(readMessage.substring(6));
-                    Toast.makeText(this,"Their score "+Integer.toString(theirScore),Toast.LENGTH_SHORT).show();
                     if(yourScore!=null ) {
                         gameEnd();
                     }
@@ -365,7 +386,6 @@ public class MainActivity extends AppCompatActivity implements WiFiDirectService
                                 break;
                             }
                         }
-                        Toast.makeText(this,contactToMsg.number,Toast.LENGTH_SHORT).show();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -491,4 +511,6 @@ public class MainActivity extends AppCompatActivity implements WiFiDirectService
             }
         }
     }
+
+
 }

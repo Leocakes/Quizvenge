@@ -116,11 +116,8 @@ public class Quiz extends android.app.Fragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         if(((Button)v).getText().equals(this.correctAnswer)) {
-            Toast.makeText(getContext(),"Correct",Toast.LENGTH_SHORT).show();
             this.score+=2;
-            Toast.makeText(getContext(),"Correct",Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(getContext(),"Incorrect",Toast.LENGTH_SHORT).show();
             this.score--;
         }
         TextView scoreView = view.findViewById(R.id.score);
