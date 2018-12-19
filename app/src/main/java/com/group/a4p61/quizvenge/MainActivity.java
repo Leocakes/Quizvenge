@@ -188,7 +188,7 @@ public class MainActivity extends AppCompatActivity implements WiFiDirectService
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    we.testtext("Text \"" + message + "\" has been send to " + contactToMsg.name + " through your opponents phone.");
+                    we.testtext("Your message has been sent through your opponents phone");
                 }
             },1000);
             //TextView v =findViewById(R.id.winning_text);
