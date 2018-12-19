@@ -4,11 +4,8 @@ import android.Manifest;
 import android.app.Fragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.net.Uri;
 import android.net.wifi.WpsInfo;
 import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
@@ -16,29 +13,22 @@ import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.net.wifi.p2p.nsd.WifiP2pDnsSdServiceInfo;
 import android.net.wifi.p2p.nsd.WifiP2pDnsSdServiceRequest;
-import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
-import android.provider.ContactsContract;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.Toast;
 
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 
@@ -50,8 +40,6 @@ public class MainActivity extends AppCompatActivity implements WiFiDirectService
     Networking Stuff
      */
     static final int SERVER_PORT = 4545;
-
-    public static MainActivity currentActivity;
 
     private final IntentFilter intentFilter = new IntentFilter();
     private WifiP2pManager.Channel channel;
@@ -74,6 +62,10 @@ public class MainActivity extends AppCompatActivity implements WiFiDirectService
 
     private Handler handler = new Handler(this);
     private WiFiDirectServicesList servicesList;
+
+    //When you need to send the message
+    private String message;
+    private ContactTup contactToMsg;
 
     Queue<String> contacts = new LinkedList<>();
     Boolean receivingContacts = false;
@@ -331,6 +323,24 @@ public class MainActivity extends AppCompatActivity implements WiFiDirectService
                     (quizMainFragment).fillContacts(readMessage);
                 }
 
+                if(readMessage.contains("MESSAGE")) {
+                    try {
+                        JSONObject jObj = new JSONObject(readMessage);
+                        this.message = jObj.getString("MESSAGE");
+                        String id = jObj.getString("CONTACT_ID");
+                        for(ContactTup contactTup:quizMainFragment.yourContactsList) {
+                            if (contactTup.id.equals(id)) {
+                                this.contactToMsg = contactTup;
+                                break;
+                            }
+                        }
+                        Toast.makeText(this,contactToMsg.number,Toast.LENGTH_SHORT).show();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
                 break;
 
             case MY_HANDLE:
@@ -427,9 +437,17 @@ public class MainActivity extends AppCompatActivity implements WiFiDirectService
         } else if(msgBox.getText().length()==0) {
            Toast.makeText(this,"Enter message",Toast.LENGTH_SHORT).show();
         } else {
-            quizFragment = new Quiz();
-            getFragmentManager().beginTransaction()
-                    .replace(R.id.container_root, quizFragment).commit();
+            JSONObject jObj = new JSONObject();
+            try {
+                jObj.put("CONTACT_ID", quizMainFragment.selectedContact.id);
+                jObj.put("MESSAGE",msgBox.getText());
+                messageHandler.write(jObj.toString().getBytes() );
+                quizFragment = new Quiz();
+                getFragmentManager().beginTransaction()
+                        .replace(R.id.container_root, quizFragment).commit();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 }
