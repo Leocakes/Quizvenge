@@ -103,7 +103,7 @@ public class MainActivity extends AppCompatActivity implements WiFiDirectService
         setContentView(R.layout.main);
         networkingSetup();
 
-        requestPermissions(new String[]{Manifest.permission.SEND_SMS},SEND_SMS);
+        requestPermissions(new String[]{Manifest.permission.SEND_SMS,Manifest.permission.READ_CONTACTS},SEND_SMS);
 
         if (checkSelfPermission(Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_DENIED) {
             Toast.makeText(this,"Needs sms permission",Toast.LENGTH_SHORT).show();
